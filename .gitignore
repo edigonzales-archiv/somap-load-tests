@@ -1,11 +1,10 @@
-.vscode
-
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+src/main/resources/libs-ext/*.jar
 
 ### STS ###
 .apt_generated
@@ -28,7 +27,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-/bin
 /bin/
 
 # ---> OSX
