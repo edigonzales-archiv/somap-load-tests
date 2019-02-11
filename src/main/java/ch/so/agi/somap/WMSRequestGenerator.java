@@ -1,6 +1,7 @@
 package ch.so.agi.somap;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,12 @@ public class WMSRequestGenerator {
         MultiPolygon regionMultiPolygon = geomFactory.createMultiPolygon(regionPolygons);
         log.debug(regionMultiPolygon.toString());
         
-        this.createCSV(count, minres, maxres, minsize, maxsize, regionMultiPolygon);
+        try {
+            this.createCSV(count, minres, maxres, minsize, maxsize, regionMultiPolygon);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
     public void createCSV(int count, double minres, double maxres, String minsize, String maxsize, File shpFile) {
@@ -67,7 +73,9 @@ public class WMSRequestGenerator {
         } 
     }
 
-    private void createCSV(int count, double minres, double maxres, String minsize, String maxsize, MultiPolygon perimeter) {
+    private void createCSV(int count, double minres, double maxres, String minsize, String maxsize, MultiPolygon perimeter) throws IOException {
+        FileWriter fw = new FileWriter("/Users/stefan/tmp/2056_.csv"); 
+        
         String[] minsizeParts = minsize.split(",");
         String[] maxsizeParts = maxsize.split(",");
         
@@ -114,9 +122,9 @@ public class WMSRequestGenerator {
             if (within) {
                 StringBuilder line = new StringBuilder();
                 line.append(String.valueOf(width));
-                line.append(",");
+                line.append(";");
                 line.append(String.valueOf(height));
-                line.append(",");
+                line.append(";");
                 line.append(String.format("%.8f", bboxEnvelope.getMinX()));
                 line.append(",");
                 line.append(String.format("%.8f", bboxEnvelope.getMinY()));
@@ -127,11 +135,15 @@ public class WMSRequestGenerator {
 
                 csvLines.add(line.toString());
                 //log.info(line.toString());
+                
+                fw.write(line.toString());
+                fw.write("\n");
 
                 count = count - 1;
             }   
         }
         log.info("******"+i);
+        fw.close();
     }
 
     private double log2(double n) {
